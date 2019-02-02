@@ -40,3 +40,8 @@ plugins:
 #   - vendor/cache/
 #   - vendor/gems/
 #   - vendor/ruby/
+
+collections:
+  topics:
+    output: true
+    permalink: /topics/:name/
