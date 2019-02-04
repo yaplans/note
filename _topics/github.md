@@ -3,4 +3,4 @@ layout: topic
 title:  "Всё о GitHub"
 ---
 
-[Jekyll](https://jekyllrb.com/) - генератор статических сайтов.
+[GitHub](https://github.com/) - генератор статических сайтов.
