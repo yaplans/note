@@ -8,12 +8,25 @@
     {%- include header.html -%}
 
     <main class="page-content" aria-label="Content">
-      <div class="wrapper">
-        {{ content }}
-      </div>
-      <div class="m_topic">
-        {%- include topics.html -%}
-      </div>
+      <div class="row">
+        <div class="col-sm-3">
+		  <div class="m_topic">
+			{%- include topics.html -%}
+		  </div>
+        </div>
+
+        <div class="col-sm-8">
+<!--
+		  <div class="wrapper">
+-->
+			{{ content }}
+<!--
+		  </div>
+-->
+        </div>
+        <div class="col-sm-1"></div>
+
+	  </div>
 
     </main>
 
