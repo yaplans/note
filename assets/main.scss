@@ -22,14 +22,17 @@ background: #FFA500;
 	border-radius: 8px;
 /*	padding: px;*/
 }
-/**/
+/*Список тегов в право клеется*/
 ul.m_list_teg {
 margin-left: 5px;
 margin-right: 5px;
 }
 
 ul.post-list {
-margin-left: 5px;
-margin-right: 5px;
+margin-left: 10px;
+margin-right: 10px;
 }
-
+/*Значек скрывается*/
+.svg-icon {
+padding-right: 0px;
+}
