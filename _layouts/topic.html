@@ -1,10 +1,11 @@
 ---
 layout: default
 ---
-
 <div class="home">
     <ul class="post-list">
-      {%- for post in site.topics -%}
+      {%- for post in site.posts -%}
+      {%- if post.tag contains page.tag -%}
+      
       <li>
         {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
         <span class="post-meta">{{ post.date | date: date_format }}</span>
@@ -13,12 +14,16 @@ layout: default
             {{ post.title | escape }}
           </a>
         </h3>
-        {%- if site.show_excerpts -%}
+<!--
+        %- if site.show_excerpts -%}
           {{ post.excerpt }}
-        {%- endif -%}
+        %- endif -%}
+-->
       </li>
+      {%- endif -%}
       {%- endfor -%}
     </ul>
-
+<!--
     <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | relative_url }}">via RSS</a></p>
+-->
 </div>

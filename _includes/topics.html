@@ -2,45 +2,19 @@
   <ul class="list-group m_list_teg">
   {% for m_page in site.topics %}
      <li class="list-group-item d-flex justify-content-between align-items-center">
-<!--
-    <a class="post-link" href="{{ page.url | prepend: site.baseurl }}">
--->
-<!--
-% if m_post.tag contains 'github' %}
--->
-    {% assign numPages = 0 %}
-    {% for m_post in site.posts %}
-<!--
-		% if m_post.tag contains m_page.tag %}
-		{{ m_post.tag }} и {{ m_page.tag }}
-{{ m_post.categories }}
--->
-		{% if m_post.categories contains m_page.tag %}
-			{% assign numPages = numPages | plus: 1 %}
-		{% endif %}
-	{% endfor %}  
-    <a href="{{ page.url | prepend: site.baseurl }}">
-		{{ m_page.title }}</a>
+		{% assign numPages = 0 %}
+		{% for m_post in site.posts %}
+			{% if m_post.tag contains m_page.tag %}
+				{% assign numPages = numPages | plus: 1 %}
+			{% endif %}
+		{% endfor %}  
+		<a href="{{ m_page.url | prepend: site.baseurl }}">
+			{{ m_page.title }}</a>
 		<span class="badge badge-primary badge-pill">{{ numPages }}</span> 
-		
 	 </li>
   {% endfor %}
   </ul>
   
-  <div class="home">
-  {% for page in site.topics %}
-<!--
-  {% if page.title and site.tags[page.slug] and page.hidden != true %}
--->
-    <h2>
-    <a class="post-link" href="{{ page.url | prepend: site.baseurl }}">
-		{{ page.title }}</a>
-    </h2>
-<!--
-  {% endif %}
--->
-  {% endfor %}
-</div>
   
   
 <!--
