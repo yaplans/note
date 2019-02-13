@@ -1,7 +1,7 @@
 ---
 layout: topic
-title:  "Print"
-tag: print
+title:  "Wi-fi"
+tag: wifi
 ---
 
 
