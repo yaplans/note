@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  клавиатура и мышь не работают в kvm lubuntu18.04
+title:  клавиатура и мышь не работают в kvm lubuntu 18.04
 date:   2019/10/17 10:57:00
 tag:    kvm ubuntu
 ---
