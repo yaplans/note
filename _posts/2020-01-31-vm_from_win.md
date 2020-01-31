@@ -6,7 +6,7 @@ categories: Linux server
 ---
 #### Хочешь управлять vm удаленно из win?
 
-- За основу взял [статью]()
+- За основу взял [статью](http://it-enginer.ru/upravlenie-kvm-s-pomoshhyu-virt-manager-na-windows/)
 
 Бери [Xming](https://sourceforge.net/projects/xming/)
 просто кликай далее...
