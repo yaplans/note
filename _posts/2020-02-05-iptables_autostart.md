@@ -1,5 +1,9 @@
-
-
+---
+layout: post
+title:  iptables autostart
+date:   2020/02/05 12:24:23
+tag:    server ubuntu
+---
 
 
 iptables
@@ -101,3 +105,6 @@ iptables-apply
 Сделал так - результат iptables-save сохранил в 
 /etc/iptables/rules.v4
 ребут - все ок!
+
+PS. Может нужно было просто установить iptables-persistent еще раз!?
+Исправления редки, поэтому так пойдет...
