@@ -6,8 +6,9 @@ tag:    server ubuntu
 ---
 
 
-##iptables
+## iptables
 как настроить автозагрузку правил...
+
 [Статья](https://qna.habr.com/q/34551)
 предлагает несколько вариантов:
 1. /etc/network/interfaces
