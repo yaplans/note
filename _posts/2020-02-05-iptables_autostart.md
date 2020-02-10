@@ -6,25 +6,25 @@ tag:    server ubuntu
 ---
 
 
-iptables
+##iptables
 как настроить автозагрузку правил...
-https://qna.habr.com/q/34551
+[Статья](https://qna.habr.com/q/34551)
 предлагает несколько вариантов:
 1. /etc/network/interfaces
 Пример:
-В /etc/rc.local:
-
-F="/etc/network/iptables.save"
-test -f "$F" && /sbin/iptables-restore < $F
+>В /etc/rc.local:
+>
+>F="/etc/network/iptables.save"
+>test -f "$F" && /sbin/iptables-restore < $F
 
 2. iptables-persistent
 
-  # service iptables-persistent
-  Usage: /etc/init.d/iptables-persistent {start|restart|reload|force-reload|save|flush}
-
-после настройки правил как нужно, сделать 
-# service iptables-persistent save 
-и при следующей загрузке они будут применены
+># service iptables-persistent
+>Usage: /etc/init.d/iptables-persistent {start|restart|reload|force-reload|save|flush}
+>
+>после настройки правил как нужно, сделать 
+># service iptables-persistent save 
+>и при следующей загрузке они будут применены
 
 3. bash/sh файл в rc.local или init.d
 ...
