@@ -1,5 +1,12 @@
+---
+layout: post
+title:  php в apache2
+date:   2020-04-28 12:26:28 +0600
+tag: server
+---
 
-
+Две и больше версий на сервере для разных виртуальных хостов и папок.
+Собственно пример для папки...
 
 ##add-apt-repository ppa:ondrej/php
 ##apt update
