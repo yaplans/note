@@ -1,0 +1,40 @@
+https://timeweb.com/ru/community/articles/kak-ispolzovat-apache-v-kachestve-obratnogo-proksi-pri-pomoshchi-mod-proxy-na-ubuntu-16-04-1
+http://geckich.blogspot.com/2011/11/modproxy-apache.html
+https://serveradmin.ru/proksirovanie-sayta-s-pomoshhyu-apache-proxy/
+
+https://httpd.apache.org/docs/2.4/mod/mod_proxy.html#proxypass
+
+
+apache может перебрасывать запросы на другой сервер!
+(другой сервер это значит не apache, любая прога принимающая http(s)
+на другом компьютере или на этом, но на другом порту)
+
+Технология называется reverse proxy - обратное прокси(рование)
+
+# a2enmod proxy proxy_http 
+(proxy_html - другое)
+# systemctl restart apache2
+
+/etc/apache2/sites-enabled/mysh_80.conf
+
+<VirtualHost *:80>
+  ServerAdmin webmaster@localhost
+  ServerName localhost
+  DocumentRoot /var/www/mysh
+## !!! - не работало, потому что апач проксировал на себя! И циклился!!!
+#  ProxyPass        /  http://localhost/canvas/:80/
+#  ProxyPassReverse /  http://localhost/canvas/:80/
+
+ProxyPreserveHost On
+## для проверки полез на роутер ---------! слешь - важен, а то оформление страдает
+ProxyPass        /  http://192.168.0.1:80/
+ProxyPassReverse /  http://192.168.0.1:80/
+
+ErrorLog ${APACHE_LOG_DIR}/error.log
+CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+</VirtualHost>
+
+!!! - работает
+
+!!! Для чего это нужно см. shellinabox - крутая вещь!!!

@@ -1,0 +1,170 @@
+https://ergoz.ru/web-ssh-klient-ssh-cherez-brauzer/
+https://www.rootfront.com/article/9467761/2013-10-01/kak-poluchit-dostup-k-ssh-terminalu-v-veb-brauzere-na-linux
+
+
+$ sudo apt install shellinabox
+
+По умолчанию слушает 0.0.0.0:4200 и "понимает" https
+
+$ sudo netstat -nap | grep shellinabox
+tcp   0      0 0.0.0.0:4200  0.0.0.0:*  LISTEN  11448/shellinaboxd
+
+
+Подключаемся так:
+https://127.0.0.1:4200/
+или издалека
+https://ip:4200/
+!!! http - не пойдет !!!
+
+Все бы хорошо, но издалека порт 4200 закрыт (22 тоже, а то зачем нам эти проблемы).
+
+Задача: подключится через web
+
+т.к. сайты на 80, а 443 не используется пока,
+постарайся подключить через "папку", чтобы как например phpmyadmin работало...
+типа так
+https://ip/mysh
+и чтобы попадали на
+http://127.0.0.1:4200/
+!!!!! - не получилось
+https://127.0.0.1:4200/
+что-то про DNS и
+ - на сертификат ругается вроде...
+/var/log/apache2/error.log
+
+[Wed Jun 10 01:18:18.383829 2020] [ssl:warn] [pid 10597] AH01909: localhost:443:
+0 server certificate does NOT include an ID which matches the server name[Wed Jun 10 01:18:26.211452 2020] [proxy:error] [pid 10600] [client 127.0.0.1:42
+490] AH00898: DNS lookup failure for: 127.0.0.1:4200shellinabox.js returned by /
+ShellInABox.js, referer: https://localhost/
+
+1. /etc/default/shellinabox
+отключим ssl ----------------! !--слушать будем только 127.0.0.1
+SHELLINABOX_ARGS="--no-beep -t --localhost-only"
+
+# systemctl restart shellinabox.service
+
+$ sudo netstat -nap | grep shellinabox
+tcp    0      0 127.0.0.1:4200  0.0.0.0:*    LISTEN  11573/shellinaboxd
+
+2. см. mod_proxy
+
+<VirtualHost *:443>
+  ServerAdmin webmaster@localhost
+  ServerName localhost
+  DocumentRoot /var/www/mysh
+
+ProxyPreserveHost On
+ProxyPass        /mysh/  http://127.0.0.1:4200/
+ProxyPassReverse /mysh/  http://127.0.0.1:4200/
+
+ErrorLog ${APACHE_LOG_DIR}/error.log
+CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+SSLEngine on
+
+SSLCertificateFile<---->/etc/ssl/certs/ssl-cert-snakeoil.pem
+SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
+
+<FilesMatch "\.(cgi|shtml|phtml|php)$">
+	SSLOptions +StdEnvVars
+</FilesMatch>
+<Directory /usr/lib/cgi-bin>
+	SSLOptions +StdEnvVars
+</Directory>
+
+</VirtualHost>
+
+!!!Ура - заработало!!!
+2 дня уже настраиваю...
+
+локально можно и без ssl, т.к. apache использует
+Недоделано:
+- запаролить папку BaseAuth
+
+http://www.microhowto.info/howto/configure_apache_as_a_reverse_proxy.html
+
+Ensure that the proxy server allows access to the proxied content
+
+Some versions of Apache deny all access by default, relying on the configuration file to explicitly specify what should be accessible and to whom. If you are using one of these versions then you may need to add a <Proxy> or <Location> section to cover the proxied content, for example:
+
+<Proxy *>
+ Order allow,deny
+ Allow from all
+</Proxy>
+
+<Directory> sections are not sufficient here because proxied content does not result in a filesystem access. Note that the Order, Allow and Deny directives are deprecated as of Apache 2.4 (although they remain for the purpose of backward compatibility), so you should not make this addition without first considering whether it is appropriate.
+
+Здесь пишут, что Directory не сработает...
+!!! И предлагают "<Proxy> or <Location> section" !!!
+и вот здесь, тоже!!!
+https://stackoverflow.com/questions/5011102/apache-reverse-proxy-with-basic-authentication
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+Итак, получилось вот что...
+Попробовал в папке все настроить, но...
+В папку попадаем используя http и https.
+http запретить не получилось...
+пробовал if - proxy не работает в if (см. оф сайт апача)
+пробовал ifdefine - тоже как-то криво - то работает, то не работает,
+как-то подозрительно...
+
+Сделал так:
+
+<VirtualHost *:80>
+  ServerAdmin webmaster@localhost
+  ServerName test
+  DocumentRoot /var/www/test
+
+#редирект, если кто без ssl сунется (ну скажем браузер так настроен).
+Redirect "/msh/myshell/" "https://test/msh/myshell/"
+
+</VirtualHost>
+
+
+<VirtualHost *:443>
+  ServerAdmin webmaster@localhost
+  ServerName test
+  DocumentRoot /var/www/test
+
+#прокси 
+    ProxyPreserveHost On
+    ProxyPass        /msh/myshell/  http://127.0.0.1:4200/
+    ProxyPassReverse /msh/myshell/  http://127.0.0.1:4200/
+    <Proxy *>
+        Order deny,allow
+        Allow from all
+#пароль        
+        Authtype Basic
+        Authname "Password Required"
+        AuthUserFile /etc/apache2/.htpasswd
+        Require valid-user
+    </Proxy>
+
+#обычные настройки SSL
+ErrorLog ${APACHE_LOG_DIR}/error.log
+CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+SSLEngine on
+
+SSLCertificateFile<---->/etc/ssl/certs/ssl-cert-snakeoil.pem
+SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
+
+</VirtualHost>
+
+!!!!!!!!
+Кстати, папки /var/www/test/msh/myshell нет в фс
+есть /var/www/test
+Вот...
+
+- разобраться с сертификатами и прочим 
+FilesMatch, <Proxy *>, еще как-нибудь защиту подправить
+
+см.
+https://www.rootfront.com/article/9467761/2013-10-01/kak-poluchit-dostup-k-ssh-terminalu-v-veb-brauzere-na-linux
+
+про ssldump см. тут
+https://rtfm.co.ua/ssl-ustanovka-i-primery-ispolzovaniya-utility-ssldump/#%D0%9F%D1%80%D0%B8%D0%BC%D0%B5%D1%80%D1%8B_%D0%B8%D1%81%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F
+
+
+про ssl-and-proxypass
+https://serverfault.com/questions/811538/ssl-and-proxypass
