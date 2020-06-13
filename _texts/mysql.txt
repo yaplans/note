@@ -1,0 +1,38 @@
+После установки lamp-server^
+не знаю пароль root
+
+
+/etc/mysql/mysql.conf.d/mysqld.cnf
+добавил
+[mysqld]
+skip-grant-tables
+...
+$ sudo service mysql restart
+
+
+mysql> select user,host,authentication_string,plugin from user;
++------------------+-----------+-------------------------------------------+-----------------------+
+| user             | host      | authentication_string                     | plugin                |
++------------------+-----------+-------------------------------------------+-----------------------+
+| root             | localhost |                                           | auth_socket           |
+| mysql.session    | localhost | *THISISNOTAVALIDPASSWORDTHATCANBEUSEDHERE | mysql_native_password |
+| mysql.sys        | localhost | *THISISNOTAVALIDPASSWORDTHATCANBEUSEDHERE | mysql_native_password |
+| debian-sys-maint | localhost | *A9B76BD50148DCB3FBCBCCE7D3A7071DA32DAD25 | mysql_native_password |
++------------------+-----------+-------------------------------------------+-----------------------+
+4 rows in set (0.05 sec)
+
+
+mysql> update user set plugin='mysql_native_password' where User='root';
+mysql> flush privileges;
+mysql> quit;
+
+[mysqld]
+##skip-grant-tables
+...
+$ sudo service mysql restart
+$ mysql_secure_installation
+плагин не нужен
+ставим пароль и остальное 'y'
+
+теперь будет работать...
+

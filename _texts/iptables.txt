@@ -1,0 +1,15 @@
+Список всех правил
+$ sudo iptables-save
+
+Список правил в цепочке FORWARD умолчальной таблицы filter
+$ sudo iptables -L FORWARD
+
+Список правил в цепочке POSTROUTING таблицы nat
+$ sudo iptables -t nat -L POSTROUTING
+
+удаление правила № 2 из цепочки FORWARD
+$ sudo iptables -D FORWARD 2
+
+удаление правила № 2 из цепочки POSTROUTING таблицы nat
+$ sudo iptables -t nat -D POSTROUTING 2
+
