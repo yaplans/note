@@ -1,3 +1,5 @@
+<h1>iptables</h1>
+<pre>
 Список всех правил
 $ sudo iptables-save
 
@@ -13,3 +15,4 @@ $ sudo iptables -D FORWARD 2
 удаление правила № 2 из цепочки POSTROUTING таблицы nat
 $ sudo iptables -t nat -D POSTROUTING 2
 
+</pre>

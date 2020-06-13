@@ -1,3 +1,5 @@
+<h1>mysql</h1>
+<pre>
 После установки lamp-server^
 не знаю пароль root
 
@@ -36,3 +38,4 @@ $ mysql_secure_installation
 
 теперь будет работать...
 
+</pre>
