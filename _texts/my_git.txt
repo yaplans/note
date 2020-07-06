@@ -1,0 +1,18 @@
+
+Доработать...
+
+#!/bin/bash
+
+## не удаляет удаленные файлы!!!
+rsync -zavP '-e ssh -p 2215' /home/ya/mt/mt ya@188.234.113.17:/opt/site/
+
+exit 0
+
+
+
+#!/bin/bash
+
+##rsync.
+rsync -zavP '-e ssh -p 2215' ya@188.234.113.17:/opt/site/mt /home/ya/mt/
+
+exit 0
