@@ -1,12 +1,44 @@
-
-Доработать...
-
 #!/bin/bash
 
-## не удаляет удаленные файлы!!!
-rsync -zavP '-e ssh -p 2215' /home/ya/mt/mt ya@188.234.113.17:/opt/site/
+ser_ip="192.168.0.15"
+ser_po="22"
+ser_to="/opt/site"
+ser_us="ya"
+ser_re='mt'
+me_path=$(pwd)
 
+
+
+act=$1
+
+# 
+echo $act
+# echo $me_path
+
+# exit 0
+
+case $act in
+  # "push")
+  "push")
+	rsync -zavP "-e ssh -p ${ser_po}" ${me_path}/${ser_re} ${ser_us}@${ser_ip}:${ser_to}
+    ;;
+  "pop")
+##echo "
+rsync -zavP '-e ssh -p ${ser_po}' ${ser_us}@${ser_ip}:${ser_to}/${ser_re} ${me_path}/
+##"
+    ;;    
+  "clean")
+  ## с очисткой на сервере
+  ## параметр для удаления найди
+	rsync -zavP '-e ssh -p ${ser_po}' ${me_path}/${ser_re} ${ser_us}@${ser_ip}:${ser_to}
+    ;;
+esac
 exit 0
+
+## не удаляет удаленные файлы!!!
+##rsync -zavP '-e ssh -p 2215' /home/ya/mt/mt ya@188.234.113.17:/opt/site/
+
+
 
 
 
