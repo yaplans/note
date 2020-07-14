@@ -1,0 +1,3 @@
+
+Bash-скрипты для графического интерфейса
+http://rus-linux.net/nlib.php?name=/MyLDP/consol/bash-scripts/sh_scripts_for_GUI_ru.html
